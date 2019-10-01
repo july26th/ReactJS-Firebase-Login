@@ -29,6 +29,7 @@ class Login extends Component {
     firebase.auth().signInWithEmailAndPassword(email, password).catch(function (error) {
       console.log(error);
     });
+    return false;
   }
 
   render() {
@@ -71,7 +72,7 @@ class Login extends Component {
       </div>
             <div><Link to="/">Quên mật khẩu?</Link></div>
           </div>
-          <button type="submit" className="btn btn-danger w-100 my-4" onClick={this.onLogin}>Đăng nhập</button>
+          <button type="button" className="btn btn-danger w-100 my-4" onClick={this.onLogin}>Đăng nhập</button>
         </form>
         <div className="text-left">Chưa có tài khoản? <Link to="/register">Đăng ký ngay</Link></div>
       </div>
