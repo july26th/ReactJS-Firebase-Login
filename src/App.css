@@ -1,0 +1,76 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 80px;
+}
+
+.App-header {
+  background-color: #222;
+  height: 150px;
+  padding: 20px;
+  color: white;
+}
+
+.App-title {
+  font-size: 1.5em;
+}
+
+.App-intro {
+  font-size: large;
+}
+.login, .register {
+  width: 360px;
+  margin: 60px auto;
+}
+
+.login-option, .remember {
+  display: flex;
+  justify-content: space-between;
+}
+.login-option button {
+  width: 170px;
+}
+.login-option button, .btn-danger{
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 10px 0;
+}
+.login-option i, button {
+  font-size: 15px !important; 
+}
+.btn-google {
+  background-color: #4285F4;
+}
+.btn-facebook {
+  background-color: #3B5998;
+}
+.form-group .text-left {
+  font-size: 13px;
+  color: gray;
+  margin: 4px 0;
+}
+
+.frame {
+  position: relative;
+}
+.frame p {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  padding: 0 8px;
+}
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.user-info label {
+  margin-right: 15px;
+}
