@@ -40,7 +40,8 @@ class Register extends Component {
                     name: user.name,
                     gender: user.gender,
                     date: user.date,
-                    phone: user.phone
+                    phone: user.phone,
+                    registerBy: "normal"
                 })
             })
             .then(() => {
