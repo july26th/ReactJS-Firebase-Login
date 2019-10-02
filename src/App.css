@@ -1,7 +1,9 @@
 a:hover {
   text-decoration: none;
 }
-
+body {
+  background: #e3f3ee;
+}
 .App {
   text-align: center;
 }
@@ -11,6 +13,7 @@ a:hover {
   margin: 60px auto;
   box-shadow: 0 2px 4px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);
   padding: 30px;
+  background: #fff;
 }
 
 .login-option, .remember {
@@ -53,9 +56,40 @@ a:hover {
   padding: 0 8px;
 }
 
-
+.register-input {
+  position: relative;
+  height: 42px;
+  overflow: hidden;
+}
+.register-input input {
+  height: 100%;
+  padding-left: 40px;
+  border-radius: 0px 5px 5px 0px;
+  border: 1px solid #eee;
+}
+.register-input input:focus {
+  box-shadow: none;
+}
+.register-input i {
+  position: absolute;
+  width: 35px;
+  top: 1px;
+  left: 1px;
+  background:#eeeeee;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+}
 
 .user-info label {
   margin-right: 10px;
   width: 29%;
+}
+
+#registerForm .validate {
+  padding-top: 10px;
+  color: red;
+  font-weight: 600;
+  font-style: italic;
+  font-size: 15px;
 }

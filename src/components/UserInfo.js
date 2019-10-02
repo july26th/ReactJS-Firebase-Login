@@ -35,22 +35,20 @@ class UserInfo extends Component {
   }
 
   authHandler = async authData => {
+    console.log(firebase.auth().currentUser.providerData[0].providerId);
     const snapshot = await firebase.firestore().collection('users').get()
     const data = snapshot.docs.find(doc => {
       return doc.data().email === authData.user.email
     }
     );
     const user = authData.user;
-    // console.log(data.data());
     if (data) { 
-      console.log('vo tren')
       let info = data.data(); 
       this.setState({
         userInfo: { ...info }
       })  
     }
     else {
-      console.log('vo duoi')
       let email = user.email;
       let displayName = user.displayName;
       let registerBy = firebase.auth().currentUser.providerData[0].providerId;

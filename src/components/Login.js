@@ -24,11 +24,14 @@ class Login extends Component {
       }
     });
   }
-  onLogin = () => {
+  onLogin = (e) => {
+    document.getElementById('testform').onsubmit = function (e) {
+      e.preventDefault();
+    }
     const { email, password } = this.state.user;
     firebase.auth().signInWithEmailAndPassword(email, password).catch(function (error) {
       console.log(error);
-    });
+    })
     return false;
   }
 
@@ -50,7 +53,7 @@ class Login extends Component {
           <hr />
           <p>hoặc</p>
         </div>
-        <form className="mt-4">
+        <form className="mt-4" action="POST" id="testform">
           <div className="login-form">
 
             <div className="form-group">
@@ -72,7 +75,7 @@ class Login extends Component {
       </div>
             <div><Link to="/">Quên mật khẩu?</Link></div>
           </div>
-          <button type="button" className="btn btn-danger w-100 my-4" onClick={this.onLogin}>Đăng nhập</button>
+          <button type="submit" className="btn btn-danger w-100 my-4" onClick={this.onLogin}>Đăng nhập</button>
         </form>
         <div className="text-left">Chưa có tài khoản? <Link to="/register">Đăng ký ngay</Link></div>
       </div>
