@@ -11,7 +11,6 @@ class App extends Component {
         <Switch>
           <Route path="/" exact match component={UserInfo} />
           <Route path="/register" match component={Register} />
-          <Route path="/user-info" match component={UserInfo} />
         </Switch>
       </div>
     );

@@ -10,8 +10,7 @@ class UpdateInfo extends Component {
                 phone: '',
                 date: '',
                 gender: 'male',
-            },
-            isUpdate: false
+            }
         };
 
     };
@@ -28,7 +27,7 @@ class UpdateInfo extends Component {
     }
     onUpdate = (update) => {
         const { email, name, registerBy, uid } = this.props.userInfo;
-        const { user, isUpdate } = this.state;
+        const { user } = this.state;
         firestore.collection('users').doc(uid).set({
             email: email,
             name: name,

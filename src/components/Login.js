@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import firebase from "firebase";
 import { Link } from 'react-router-dom';
-// import  { firebaseApp, firestore } from "../base";
 class Login extends Component {
   constructor(props) {
     super(props);
@@ -10,6 +9,8 @@ class Login extends Component {
         email: '',
         password: ''
       },
+      check: true,
+      submitted: false
     };
 
   }
@@ -21,22 +22,31 @@ class Login extends Component {
       user: {
         ...user,
         [name]: value
-      }
+      },
+      check: true
     });
   }
-  onLogin = (e) => {
-    document.getElementById('testform').onsubmit = function (e) {
-      e.preventDefault();
-    }
+  onLogin = () => {
     const { email, password } = this.state.user;
-    firebase.auth().signInWithEmailAndPassword(email, password).catch(function (error) {
-      console.log(error);
+    this.setState({
+      submitted: true
     })
-    return false;
+    firebase.auth().signInWithEmailAndPassword(email, password).
+    then( () => {
+      this.props.onLogin();
+    }
+    )
+    .catch((e) => {
+      if(e.code == "auth/wrong-password")
+      this.setState({
+        check: false
+      })
+    })
+   
   }
 
   render() {
-    const { user } = this.state;
+    const { user, submitted } = this.state;
     return (
       <div className="login">
         <h4>Đăng nhập</h4>
@@ -60,12 +70,25 @@ class Login extends Component {
               <p className="text-left">Email</p>
               <input type="email" className="form-control" placeholder="Nhập vào Email..."
                 name="email" value={user.email} onChange={this.handleChange} required />
+                  {submitted && !user.email &&
+                <div className="text-left validate">
+                  Vui lòng nhập email
+                </div>}
             </div>
             <div className="form-group">
               <p className="text-left">Mật khẩu</p>
               <input type="password" className="form-control" placeholder="Nhập vào mật khẩu..."
                 name="password" value={user.password} onChange={this.handleChange} required
                 autoComplete="new-password" />
+                 {submitted && !user.password &&
+                <div className="text-left validate">
+                  Vui lòng nhập mật khẩu
+                </div>}
+                { user.password && submitted && !this.state.check &&
+                <div className="text-left validate">
+
+                  Tên tài khoản hoặc mật khẩu không chính xác
+                </div>}
             </div>
           </div>
           <div className="remember">
@@ -75,7 +98,7 @@ class Login extends Component {
       </div>
             <div><Link to="/">Quên mật khẩu?</Link></div>
           </div>
-          <button type="submit" className="btn btn-danger w-100 my-4" onClick={this.onLogin}>Đăng nhập</button>
+          <button type="button" className="btn btn-danger w-100 my-4" onClick={this.onLogin}>Đăng nhập</button>
         </form>
         <div className="text-left">Chưa có tài khoản? <Link to="/register">Đăng ký ngay</Link></div>
       </div>

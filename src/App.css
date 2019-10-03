@@ -86,7 +86,7 @@ body {
   width: 29%;
 }
 
-#registerForm .validate {
+#registerForm .validate, .login .validate {
   padding-top: 10px;
   color: red;
   font-weight: 600;
