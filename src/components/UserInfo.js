@@ -5,19 +5,21 @@ import UpdateInfo from "./UpdateInfo";
 import { firebaseApp, firestore } from "../base";
 
 class UserInfo extends Component {
+  _isMounted = false;
   state = {
     userInfo: {
     }
   };
 
   componentDidMount() {
+    this._isMounted = true;
     firebase.auth().onAuthStateChanged(user => {
-      if (user) {
+      if (user && this._isMounted) {
+        console.log('ihi');
         this.authHandler({ user });
       }
     });
   }
-
 
   authHandler = async authData => {
     const snapshot = await firebase.firestore().collection('users').get()
@@ -58,7 +60,6 @@ class UserInfo extends Component {
   };
 
   authenticate = provider => {
-
     const authProvider = new firebase.auth[`${provider}AuthProvider`]();
     firebaseApp
       .auth()
@@ -80,21 +81,25 @@ class UserInfo extends Component {
         this.authHandler({ user });
       }
     });
-
+  }
+  componentWillUnmount() {
+    this._isMounted = false;
   }
   onLogin = () => {
-    localStorage.setItem('isLogin', JSON.stringify(true));
-  }
-  vertification = () => {
-    var user = firebase.auth().currentUser;
-    user.sendEmailVerification().then(function () {
-      console.log('send');
-    }).catch(function (error) {
-      console.log(error);
+    firebase.auth().onAuthStateChanged(user => {
+      if (user && this._isMounted) {
+        this.authHandler({ user });
+      }
     });
+    if(firebase.auth().currentUser.emailVerified === true)
+    localStorage.setItem('isLogin', JSON.stringify(true));
+    else {
+      const $ = window.$;
+      $('#vertiBox').modal('show');
+    }
   }
   render() {
-    console.log(firebase.auth().currentUser);
+    console.log('render');
     var login = JSON.parse(localStorage.getItem('isLogin'));
     var update = JSON.parse(localStorage.getItem('isUpdate'));
     if (!login === true) {
@@ -105,7 +110,6 @@ class UserInfo extends Component {
       if (update === true) {
         return (
           <div className="info">
-            <button onClick={this.vertification}>Xác nhận Email</button>
             <h4>Thông tin của bạn</h4>
             <div className="text-left pl-4 mt-4">
               <div className="user-info">

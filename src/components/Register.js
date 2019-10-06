@@ -61,11 +61,18 @@ class Register extends Component {
                         })
                     })
                     .then(() => {
-                        const $ = window.$;
-                        $('#modelId').modal('show');
+                        let user = firebase.auth().currentUser;
+                        user.sendEmailVerification().then(function () {
+                            const $ = window.$;
+                            $('#modelId').modal('show');
+                            console.log('send');
+                        }).catch(function (error) {
+                            console.log(error);
+                        });
                     }
                     )
                     .catch((error) => {
+                        console.log(error);
                         if (error.code == "auth/email-already-in-use")
                             this.setState({
                                 existedUser: true
@@ -78,6 +85,7 @@ class Register extends Component {
             this.setState({ checkLength: false });
         }
     }
+
     close = () => {
         const $ = window.$;
         $('#modelId').modal('hide');
@@ -196,10 +204,10 @@ class Register extends Component {
                                 <div className="modal-content">
 
                                     <div className="modal-body">
-                                        <p>Đăng ký thành công</p>
+                                        <h5>Đăng ký thành công, vui lòng kiểm tra E-mail để xác nhận tài khoản</h5>
                                     </div>
                                     <div className="modal-footer">
-                                        <button type="button" className="btn"><Link to="/" onClick={this.close} >Trở lại trang chủ</Link></button>
+                                        <button type="button" className="btn-success"><Link to="/" onClick={this.close} >Trở lại trang chủ</Link></button>
                                         <button type="button" className="btn" onClick={this.continue}>
                                             <Link to="/register">Tiếp tục đăng ký</Link></button>
                                     </div>
