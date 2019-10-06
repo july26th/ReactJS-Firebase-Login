@@ -96,7 +96,7 @@ class Login extends Component {
               <input type="checkbox" className="form-check-input" value="checkedValue" />
               Ghi nhớ đăng nhập
       </div>
-            <div><Link to="/">Quên mật khẩu?</Link></div>
+            <div><Link to="/forgot-password">Quên mật khẩu?</Link></div>
           </div>
           <button type="button" className="btn btn-danger w-100 my-4" onClick={this.onLogin}>Đăng nhập</button>
         </form>

@@ -28,12 +28,12 @@ class UserInfo extends Component {
     const user = authData.user;
     if (data) {
       let info = data.data();
-    
+
       localStorage.setItem('user', JSON.stringify(info));
       if (info.isUpdate === true) localStorage.setItem('isUpdate', JSON.stringify(true));
-      
+
       else localStorage.setItem('isUpdate', JSON.stringify(false));
-      
+
       this.setState({
         userInfo: { ...info }
       });
@@ -58,12 +58,14 @@ class UserInfo extends Component {
   };
 
   authenticate = provider => {
+
     const authProvider = new firebase.auth[`${provider}AuthProvider`]();
-    localStorage.setItem('isLogin', JSON.stringify(true));
     firebaseApp
       .auth()
       .signInWithPopup(authProvider)
       .then(this.authHandler)
+      .then(localStorage.setItem('isLogin', JSON.stringify(true))
+      )
 
   };
 
@@ -78,13 +80,21 @@ class UserInfo extends Component {
         this.authHandler({ user });
       }
     });
-  
+
   }
   onLogin = () => {
     localStorage.setItem('isLogin', JSON.stringify(true));
   }
-
+  vertification = () => {
+    var user = firebase.auth().currentUser;
+    user.sendEmailVerification().then(function () {
+      console.log('send');
+    }).catch(function (error) {
+      console.log(error);
+    });
+  }
   render() {
+    console.log(firebase.auth().currentUser);
     var login = JSON.parse(localStorage.getItem('isLogin'));
     var update = JSON.parse(localStorage.getItem('isUpdate'));
     if (!login === true) {
@@ -93,10 +103,9 @@ class UserInfo extends Component {
     else {
       var userInfo = JSON.parse(localStorage.getItem('user'));
       if (update === true) {
-        console.log('zo day');
-      
         return (
           <div className="info">
+            <button onClick={this.vertification}>Xác nhận Email</button>
             <h4>Thông tin của bạn</h4>
             <div className="text-left pl-4 mt-4">
               <div className="user-info">
