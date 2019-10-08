@@ -21,6 +21,11 @@ class Register extends Component {
             existedUser: false,
         };
         this.refPassword = React.createRef();
+        this.refFocus = React.createRef();
+    }
+
+    componentDidMount() {
+        this.refFocus.current.focus();
     }
 
     handleChange = event => {
@@ -73,7 +78,7 @@ class Register extends Component {
                     )
                     .catch((error) => {
                         console.log(error);
-                        if (error.code == "auth/email-already-in-use")
+                        if (error.code === "auth/email-already-in-use")
                             this.setState({
                                 existedUser: true
                             });
@@ -125,7 +130,7 @@ class Register extends Component {
                                     <i className="far fa-envelope"></i>
                                     <input type="text" className="form-control" placeholder="Nhập vào Email..."
                                         name="email" value={user.email} onChange={this.handleChange}
-                                        autoComplete="off" required />
+                                        autoComplete="off" required  ref={this.refFocus} />
                                 </div>
                                 {submitted && !user.email &&
                                     <div className="text-left validate">Vui lòng nhập Email</div>}
@@ -207,8 +212,8 @@ class Register extends Component {
                                         <h5>Đăng ký thành công, vui lòng kiểm tra E-mail để xác nhận tài khoản</h5>
                                     </div>
                                     <div className="modal-footer">
-                                        <button type="button" className="btn-success"><Link to="/" onClick={this.close} >Trở lại trang chủ</Link></button>
-                                        <button type="button" className="btn" onClick={this.continue}>
+                                        <button type="button" className="btn btn-success"><Link to="/" onClick={this.close} >Trở lại trang chủ</Link></button>
+                                        <button type="button" className="btn btn-dark" onClick={this.continue}>
                                             <Link to="/register">Tiếp tục đăng ký</Link></button>
                                     </div>
                                 </div>

@@ -33,9 +33,7 @@ class UserInfo extends Component {
 
       localStorage.setItem('user', JSON.stringify(info));
       if (info.isUpdate === true) localStorage.setItem('isUpdate', JSON.stringify(true));
-
       else localStorage.setItem('isUpdate', JSON.stringify(false));
-
       this.setState({
         userInfo: { ...info }
       });
@@ -65,14 +63,17 @@ class UserInfo extends Component {
       .auth()
       .signInWithPopup(authProvider)
       .then(this.authHandler)
-      .then(localStorage.setItem('isLogin', JSON.stringify(true))
-      )
+      .then(() => {
+        localStorage.setItem('isLogin', JSON.stringify(true));
+      });
 
   };
 
   logout = async () => {
     await firebase.auth().signOut();
-    localStorage.setItem('isLogin', JSON.stringify(false));
+    localStorage.removeItem('isLogin');
+    localStorage.removeItem('user');
+    localStorage.removeItem('isUpdate');
     this.setState({ userInfo: {} });
   };
   isUpdate = () => {
@@ -99,7 +100,7 @@ class UserInfo extends Component {
     }
   }
   render() {
-    console.log('render');
+    // console.log('render');
     var login = JSON.parse(localStorage.getItem('isLogin'));
     var update = JSON.parse(localStorage.getItem('isUpdate'));
     if (!login === true) {

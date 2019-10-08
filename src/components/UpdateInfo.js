@@ -10,6 +10,7 @@ class UpdateInfo extends Component {
                 phone: '',
                 date: '',
                 gender: 'male',
+                submitted: false,
             }
         };
 
@@ -28,6 +29,10 @@ class UpdateInfo extends Component {
     onUpdate = (update) => {
         const { email, name, registerBy, uid } = this.props.userInfo;
         const { user } = this.state;
+        this.setState({
+            submitted: true
+        });
+        if (user.phone && user.date) {
         firestore.collection('users').doc(uid).set({
             email: email,
             name: name,
@@ -40,10 +45,11 @@ class UpdateInfo extends Component {
             .then(
                 () => { return this.props.isUpdate(update); }
             )
+        }
     }
 
     render() {
-        const { user } = this.state;
+        const { user, submitted } = this.state;
         return (
 
             <div className="update-info my-3">
@@ -70,11 +76,16 @@ class UpdateInfo extends Component {
                         <input type="date" className="form-control" placeholder="Nhập vào mật khẩu..."
                             name="date" value={user.date} required onChange={this.handleChange}
                         />
+                         {submitted && !user.date &&
+                                    <div className="text-left validate">Vui lòng chọn ngày sinh</div>}
                     </div>
                     <div className="form-group">
                         <p className="text-left">Số điện thoại</p>
                         <input type="number" className="form-control" placeholder="Nhập vào số điện thoại..."
                             name="phone" value={user.phone} required onChange={this.handleChange} />
+                                {submitted && !user.phone &&
+                                    <div className="text-left validate">Vui lòng nhập số điện thoại</div>}
+                        
                     </div>
                     <div className="text-center">
                         <button type="button" className="btn btn-success" onClick={() => this.onUpdate(true)}>Lưu</button>

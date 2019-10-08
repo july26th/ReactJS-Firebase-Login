@@ -12,7 +12,6 @@ class Login extends Component {
       check: true,
       submitted: false
     };
-
   }
 
   handleChange = event => {
@@ -31,13 +30,11 @@ class Login extends Component {
     this.setState({
       submitted: true
     })
-    firebase.auth().signInWithEmailAndPassword(email, password).
-      then(() => {
-        this.props.onLogin();
-      }
-      )
+    firebase.auth().signInWithEmailAndPassword(email, password).then(() => {
+      this.props.onLogin();
+    })
       .catch((e) => {
-        if (e.code == "auth/wrong-password")
+        if (e.code === "auth/wrong-password")
           this.setState({
             check: false
           })
@@ -45,8 +42,7 @@ class Login extends Component {
 
   }
   reSend = () => {
-    var user = firebase.auth().currentUser;
-    console.log(user);
+    let user = firebase.auth().currentUser;
     user.sendEmailVerification().then(function () {
       console.log('send');
     }).catch(function (error) {
@@ -61,10 +57,10 @@ class Login extends Component {
         <p>với mạng xã hội của bạn</p>
         <div className="login-option mb-4 pb-2">
           <button className="btn mr-4 btn-google" onClick={() => this.props.authenticate("Google")}>
-            <i className="fab fa-facebook-f mr-1"></i> Google
+            <i className="fab fa-google-plus-g mr-1"></i> Google
       </button>
           <button className="btn btn-facebook" onClick={() => this.props.authenticate("Facebook")}>
-            <i className="fab fa-google-plus-g mr-1"></i> Facebook
+            <i className="fab fa-facebook-f mr-1"></i> Facebook
       </button>
         </div>
         <div className="frame">
@@ -114,13 +110,13 @@ class Login extends Component {
             <div className="modal-content">
 
               <div className="modal-body">
-                <p>Tài khoản chưa được xác thực, vui lòng kiểm tra E-mail để xác thực tài khoản.</p>
+                <h5>Tài khoản chưa được xác thực, vui lòng kiểm tra lại E-mail để xác thực tài khoản.</h5>
               </div>
               <div className="modal-footer">
-              <button type="button" className="btn btn-success" onClick={this.reSend} data-dismiss="modal">
-                  Gửi lại E-mail xác nhận
+                <button type="button" className="btn btn-success" onClick={this.reSend} data-dismiss="modal">
+                  Gửi lại E-mail xác thực
                   </button>
-                <button type="button" className="btn" onClick={this.close} data-dismiss="modal">
+                <button type="button" className="btn btn-dark" data-dismiss="modal">
                   Đóng
                   </button>
               </div>
