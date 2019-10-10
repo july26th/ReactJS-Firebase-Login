@@ -15,7 +15,6 @@ class UserInfo extends Component {
     this._isMounted = true;
     firebase.auth().onAuthStateChanged(user => {
       if (user && this._isMounted) {
-        console.log('ihi');
         this.authHandler({ user });
       }
     });
@@ -65,6 +64,11 @@ class UserInfo extends Component {
       .then(this.authHandler)
       .then(() => {
         localStorage.setItem('isLogin', JSON.stringify(true));
+      }).catch((e) => {
+        if (e.code === "auth/account-exists-with-different-credential") {
+          const $ = window.$;
+          $('#existed').modal('show');
+        }
       });
 
   };
@@ -92,8 +96,8 @@ class UserInfo extends Component {
         this.authHandler({ user });
       }
     });
-    if(firebase.auth().currentUser.emailVerified === true)
-    localStorage.setItem('isLogin', JSON.stringify(true));
+    if (firebase.auth().currentUser.emailVerified === true)
+      localStorage.setItem('isLogin', JSON.stringify(true));
     else {
       const $ = window.$;
       $('#vertiBox').modal('show');

@@ -15,10 +15,14 @@ class Register extends Component {
                 phone: '',
                 date: '',
                 gender: 'male',
+                repassword: ''
             },
             submitted: false,
             checkLength: false,
             existedUser: false,
+            invalidEmail: false,
+            checkAge: false,
+            checkPassword: false
         };
         this.refPassword = React.createRef();
         this.refFocus = React.createRef();
@@ -35,7 +39,11 @@ class Register extends Component {
             user: {
                 ...user,
                 [name]: value
-            }
+            },
+            invalidEmail: false,
+            existedUser: false,
+            checkAge: false,
+            checkPassword: false
         });
         if (this.refPassword.current.value.length >= 6)
             this.setState({
@@ -51,7 +59,19 @@ class Register extends Component {
         const { user } = this.state;
         this.setState({ submitted: true });
         if (this.refPassword.current.value.length >= 6) {
-            if (user.email && user.name && user.phone && user.date) {
+            let thisyear = new Date().getFullYear();
+            let age = new Date(user.date).getFullYear();
+            if (thisyear - age < 16) {
+                this.setState({
+                    checkAge: true
+                })
+            }
+            else if (user.repassword && user.password && user.repassword !== user.password) {
+                this.setState({
+                    checkPassword: true
+                })
+            }
+            else if (user.email && user.name && user.phone && user.date) {
                 this.setState({ checkLength: true });
                 firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
                     .then((resp) => {
@@ -82,6 +102,10 @@ class Register extends Component {
                             this.setState({
                                 existedUser: true
                             });
+                        else if (error.code === "auth/invalid-email")
+                            this.setState({
+                                invalidEmail: true
+                            })
                     });
 
             }
@@ -106,14 +130,14 @@ class Register extends Component {
                 phone: '',
                 date: '',
                 gender: 'male',
+                repassword: ''
             },
             submitted: false,
             checkLength: false,
         })
     }
     render() {
-        const { user, submitted, checkLength, existedUser } = this.state;
-        console.log(checkLength);
+        const { user, submitted, checkLength, existedUser, invalidEmail, checkAge, checkPassword } = this.state;
         var login = JSON.parse(localStorage.getItem('isLogin'));
         if (login === true) return <Redirect to="/" />
         else
@@ -130,12 +154,14 @@ class Register extends Component {
                                     <i className="far fa-envelope"></i>
                                     <input type="text" className="form-control" placeholder="Nhập vào Email..."
                                         name="email" value={user.email} onChange={this.handleChange}
-                                        autoComplete="off" required  ref={this.refFocus} />
+                                        autoComplete="off" required ref={this.refFocus} />
                                 </div>
                                 {submitted && !user.email &&
                                     <div className="text-left validate">Vui lòng nhập Email</div>}
                                 {submitted && existedUser &&
                                     <div className="text-left validate">Email này đã có người sử dụng</div>}
+                                {submitted && invalidEmail &&
+                                    <div className="text-left validate">Email không đúng định dạng</div>}
                             </div>
                             <div className="form-group">
                                 <p className="text-left">Mật khẩu</p>
@@ -153,6 +179,23 @@ class Register extends Component {
                                     <div className="text-left validate">Mật khẩu phải có ít nhất 6 ký tự</div>}
 
                             </div>
+                            <div className="form-group">
+                                <p className="text-left">Xác nhận mật khẩu</p>
+                                <div className="register-input">
+                                    <i className="fas fa-check-double"></i>
+                                    <input type="password" className="form-control" placeholder="Nhập vào mật khẩu..."
+                                        name="repassword" value={user.repasasword} onChange={this.handleChange}
+                                        autoComplete="new-password" required
+                                        ref={this.refrePassword}
+                                    />
+                                </div>
+                                {submitted && !user.repassword &&
+                                    <div className="text-left validate">Vui lòng nhập xác nhận mật khẩu</div>}
+                                {submitted && user.repassword && checkPassword &&
+                                    <div className="text-left validate">Mật khẩu không trùng khớp</div>}
+
+                            </div>
+
                             <div className="form-group">
                                 <p className="text-left">Họ tên</p>
                                 <div className="register-input">
@@ -186,6 +229,8 @@ class Register extends Component {
                                 </div>
                                 {submitted && !user.date &&
                                     <div className="text-left validate">Vui lòng chọn ngày sinh</div>}
+                                {submitted && user.date && checkAge &&
+                                    <div className="text-left validate">Bạn phải từ 16 tuổi mới có thể đăng ký</div>}
                             </div>
                             <div className="form-group">
                                 <p className="text-left">Số điện thoại</p>

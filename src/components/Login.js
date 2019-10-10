@@ -10,7 +10,9 @@ class Login extends Component {
         password: ''
       },
       check: true,
-      submitted: false
+      submitted: false,
+      notFound: true,
+      sendError: false
     };
   }
 
@@ -22,13 +24,15 @@ class Login extends Component {
         ...user,
         [name]: value
       },
-      check: true
+      check: true,
+      notFound: true
     });
   }
   onLogin = () => {
     const { email, password } = this.state.user;
     this.setState({
-      submitted: true
+      submitted: true,
+      sendError: false 
     })
     firebase.auth().signInWithEmailAndPassword(email, password).then(() => {
       this.props.onLogin();
@@ -38,6 +42,11 @@ class Login extends Component {
           this.setState({
             check: false
           })
+        else
+          this.setState({
+            notFound: false
+          })
+        // console.log(e);
       })
 
   }
@@ -45,12 +54,16 @@ class Login extends Component {
     let user = firebase.auth().currentUser;
     user.sendEmailVerification().then(function () {
       console.log('send');
-    }).catch(function (error) {
-      console.log(error);
+    }).catch((e) => {
+      if (e.code === "auth/too-many-requests")
+        this.setState({
+          sendError: true
+        });
     });
+
   }
   render() {
-    const { user, submitted } = this.state;
+    const { user, submitted, check, notFound, sendError } = this.state;
     return (
       <div className="login">
         <h4>Đăng nhập</h4>
@@ -88,11 +101,17 @@ class Login extends Component {
                 <div className="text-left validate">
                   Vui lòng nhập mật khẩu
                 </div>}
-              {user.password && submitted && !this.state.check &&
+              {submitted && !check && user.email && user.password &&  
                 <div className="text-left validate">
-
                   Tên tài khoản hoặc mật khẩu không chính xác
                 </div>}
+              {user.email && user.password && submitted && !notFound &&
+                <div className="text-left validate">
+                  Tài khoản không chính xác hoặc không tồn tại
+                </div>}
+                {submitted && sendError &&
+                  <div className="text-left validate">Gửi E-mail xác nhận thất bại, vui lòng thử lại sau vài phút.</div>
+                }
             </div>
           </div>
           <div className="remember">
@@ -116,6 +135,21 @@ class Login extends Component {
                 <button type="button" className="btn btn-success" onClick={this.reSend} data-dismiss="modal">
                   Gửi lại E-mail xác thực
                   </button>
+                <button type="button" className="btn btn-dark" data-dismiss="modal">
+                  Đóng
+                  </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="modal fade" id="existed" tabIndex={-1} role="dialog" data-backdrop="static" data-keyboard="false">
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+
+              <div className="modal-body">
+                <h5>Tên E-mail này đã được đăng ký tài khoản, vui lòng hãy chọn tài khoản khác.</h5>
+              </div>
+              <div className="modal-footer">
                 <button type="button" className="btn btn-dark" data-dismiss="modal">
                   Đóng
                   </button>
